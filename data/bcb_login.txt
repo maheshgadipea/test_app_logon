@@ -1,0 +1,462 @@
+LLOYDS BANK — ONLINE FOR BUSINESS
+
+USER HELP & TROUBLESHOOTING GUIDE
+
+SECTION 1: REGISTRATION & FIRST-TIME LOGIN REQUIREMENTS
+
+Guidance: Register for Online for Business Requirements
+
+To register, you will need:
+
+  - Your business name
+  - Your Lloyds Business Account sort code
+  - Your Lloyds Business Account account number
+  - A mobile phone with a UK number
+  - A valid passport or UK driving licence
+
+Guidance: Register for Online for Business
+
+If you have all the required registration details:
+
+1.  Go to the Register your business for Online for Business page [2].
+2.  Follow the on-screen instructions.
+
+Guidance: First-Time Login Requirements (No Personal Account)
+
+If you do not have a personal account with Lloyds, you must have the following
+to log into Online for Business for the first time:
+
+  - Username — Sent by post or email (takes up to 5 working days to arrive) [2].
+  - Temporary password — Sent by text (takes up to 10 working days to arrive)
+    [2].
+  - Card reader — Sent by post (takes up to 10 working days to arrive) [2].
+  - Authentication card or Business Debit Card — Sent by post (takes up to 5
+    working days to arrive) [2].
+  - PIN for your authentication card or Business Debit Card — Sent by post
+    separately from your card (takes up to 10 working days to arrive) [2].
+
+Note: All items will be sent separately after you have registered for Online for
+Business [2].
+
+Guidance: First-Time Login Requirements (Has Personal Account)
+
+If you already have a personal account with Lloyds, you must have:
+
+  - Card reader — Sent by post (takes up to 10 working days to arrive) [2].
+  - Authentication card or Business Debit Card — Sent by post (takes up to 5
+    working days to arrive) [2].
+  - PIN for your authentication card or Business Debit Card — Sent by post
+    separately from your card (takes up to 10 working days to arrive) [2].
+
+SECTION 2: GENERAL LOGIN GUIDANCE
+
+Guidance: Login Requirements
+
+To log into Online for Business, you will need:
+
+  - Your username [9].
+  - A passkey, memorable information, or a card reader (using a Business Debit
+    Card or authentication card and PIN) [9].
+
+Guidance: Login on a Trusted Device and Using Passkey
+
+Follow these steps to log in when you are on a trusted device and using a
+passkey:
+
+1.  Go to the Online for Business login page [9].
+2.  Enter your username (previously called User ID) [9]. If you already use
+    Lloyds personal internet banking, you may use the same login details [9].
+3.  Select Passkey to confirm it is you on the Confirm it's you page [9].
+4.  Select Continue on the Verify it's you with a passkey page [9].
+5.  Follow the on-screen instructions [9].
+
+Guidance: Login on a Trusted Device and Using Memorable Information
+
+Follow these steps to log in when you are on a trusted device and using your
+memorable information:
+
+1.  Go to the Online for Business login page [9].
+2.  Enter your username (previously called User ID) [7]. If you already use
+    Lloyds personal internet banking, you may use the same login details [7].
+3.  Select Memorable information to confirm it is you on the Confirm it's you
+    page [7].
+4.  Enter the three characters requested on the Enter your memorable information
+    page [7].
+
+Guidance: Login on a Trusted Device and Using Card Reader, Card, and PIN
+
+Follow these steps to log in when you use your card reader, Business Debit Card
+or authentication card, and PIN, and you are on a trusted device:
+
+1.  Go to the Online for Business login page [7].
+2.  Enter your username (previously called User ID) [7]. If you already use
+    Lloyds personal internet banking, you may use the same login details [7].
+3.  Select Card and reader to confirm it is you on the Confirm it's you page
+    [7].
+4.  Enter the last 5 digits of the card you are using on the Enter the passcode
+    from your card reader page [7].
+5.  Insert your Business Debit Card or authentication card into the card reader
+    and press the Identify button [7].
+6.  Enter the card PIN and press Enter on the card reader [7].
+7.  Type the 8-digit passcode shown on the card reader into the Enter the
+    passcode from your card reader page on screen and select Continue [7].
+
+Guidance: Login NOT on a Trusted Device and Using Card and Reader
+
+Follow these steps to log in when you use your card reader, Business Debit Card
+or authentication card, and PIN, and you are not on a trusted device:
+
+1.  Go to the Online for Business login page [7].
+2.  Enter your username (previously called User ID) [7]. If you already use
+    Lloyds personal internet banking, you may use the same login details [7].
+3.  Enter the last 5 digits of the card you are using on the Enter the passcode
+    from your card reader page [7].
+4.  Insert your Business Debit Card or authentication card into the card reader
+    and press the Identify button [7].
+5.  Enter the card PIN and press Enter on the card reader [7].
+6.  Type the 8-digit passcode shown on the card reader into the Enter the
+    passcode from your card reader page on screen and select Continue [7].
+
+SECTION 3: LOGIN PROBLEMS & CAUSES QUICK REFERENCE
+
+| Issue                                                                        | Potential Causes                                                                                                                                                                                                    |
+| :--------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **No Business Debit Card or authentication card received** \[1\]             | • Not waited 10 working days for delivery.<br>• Wrong delivery address given.<br>• Lost during delivery (if waiting more than 10 days).                                                                             |
+| **No replacement Business Debit Card or authentication card received** \[1\] | • Not waited 10 working days for delivery.<br>• Wrong delivery address given.<br>• Lost during delivery (if waiting more than 10 days).                                                                             |
+| **Account temporarily locked** \[1\]                                         | • Wrong memorable information entered too many times.<br>• Wrong card reader passcode entered too many times.                                                                                                       |
+| **Account suspended** \[1\]                                                  | • Bank has a security concern with your account.                                                                                                                                                                    |
+| **Online for Business not working** \[1\]                                    | • Technical problem with the Online for Business platform.                                                                                                                                                          |
+| **Username not received after registration** \[5\]                           | • Not waited 5 working days for delivery.<br>• Wrong delivery address given.<br>• Lost during delivery.                                                                                                             |
+| **Username not accepted** \[5\]                                              | • Forgotten.<br>• Entered incorrectly.<br>• Changed recently and using the old username.<br>• Not registered for Online for Business.                                                                               |
+| **Passkey not created/enrolled** \[5\]                                       | • Not using a Windows operating system.<br>• Not saving the passkey to a Windows device.                                                                                                                            |
+| **Temporary password not received** \[5\]                                    | • Not waited 10 working days for delivery by text.<br>• Delivery failure if waiting longer than 10 working days.                                                                                                    |
+| **Memorable information not accepted** \[5\]                                 | • Entered characters incorrectly.<br>• Forgotten.<br>• Changed recently and using the old memorable information.                                                                                                    |
+| **Memorable information not a login option** \[5\]                           | • Device is not trusted.<br>• Cookies have been cleared on the browser (manually or auto-deleted).<br>• Using private browsing.<br>• Unusual login activity.<br>• Other people have used the same device to log in. |
+| **Card reader not received after registration** \[5\]                        | • Not waited 10 working days for delivery.<br>• Wrong delivery address given.<br>• Lost during delivery (if waiting more than 10 days).                                                                             |
+| **Replacement card reader not received** \[5\]                               | • Not waited 10 working days.<br>• Wrong delivery address given.<br>• Lost during delivery (if waiting more than 10 days).                                                                                          |
+| **Card reader not turning on** \[5\]                                         | • Batteries need replacing.                                                                                                                                                                                         |
+| **Card reader passcode not accepted** \[5\]                                  | • Wrong card number used.<br>• Card number does not match what is displayed on the screen.<br>• Passcode entered incorrectly.                                                                                       |
+| **Card reader locked** \[5\]                                                 | • Entered card PIN incorrectly too many times.                                                                                                                                                                      |
+
+SECTION 4: DETAILED TROUBLESHOOTING
+
+Troubleshooting: What is Online for Business?
+
+Online for Business is Lloyds Bank’s secure online banking service for business
+customers [3]. It allows you to view and manage all of your business accounts in
+one place [3].
+
+Troubleshooting: User ID or Username
+
+We have replaced the term "User ID" with "username" [8]. However, you might
+still see the term "User ID" on some Lloyds Bank pages [8].
+
+Troubleshooting: No UK Mobile Phone Number
+
+If you do not have a mobile phone with a UK number, call us to register for
+Online for Business on 0345 072 5555 [3].
+
+  - Opening Hours: Monday to Friday, 8am to 6pm. Saturday, 9am to 2pm [3].
+  - International Calls: +44 1733 347 338 [3].
+  - Accessibility Support: Call via Relay UK if you have a hearing or speech
+    impairment [3]. Sign Video services are also available for Deaf users who
+    communicate using British Sign Language [3]. Additional information is
+    available on the Deaf or Hearing Loss support page [3].
+
+Troubleshooting: Username Isn't Working or Forgotten
+
+If your username is not working or you have forgotten it, you will need to
+recover it [8].
+
+What you will need:
+
+  - Your Lloyds Business Account sort code and account number, OR your Business
+    Credit Card number [8].
+  - Your first name [8].
+  - Your last name [8].
+  - Your date of birth [8].
+
+Steps to recover:
+
+1.  Go to the Forgotten your details? page [8].
+2.  Enter your details on the Forgotten your logon details? page [8].
+3.  Select your account type, then enter your sort code, account number, first
+    name, last name, and date of birth [8].
+4.  Select Continue to display your Username on screen [8].
+
+Troubleshooting: No Username Received After Registering
+
+If you are new to Lloyds Bank, have registered for Online for Business, and do
+not have a personal account, your username is sent via email or post within 5
+working days [3].
+
+If you have waited more than 5 working days, call us on 0345 072 5555 (or
++44 1733 347 338 from outside the UK) [3].
+
+Troubleshooting: No Temporary Password Received After Registering
+
+If you are new to Lloyds Bank, have registered for Online for Business, and do
+not have a personal account, your temporary password is sent by text within 10
+working days [3].
+
+If you have waited more than 10 working days, call us on 0345 072 5555 (or
++44 1733 347 338 from outside the UK) [3].
+
+Troubleshooting: Lost a Temporary Password or It's Not Working
+
+If you have lost your temporary password or it is not working when logging in
+for the first time, you can create a new password [3].
+
+What you will need:
+
+  - Your username (User ID) [3]
+  - Your first name [4]
+  - Your last name [4]
+  - Your date of birth [4]
+
+Note: The recovery process differs depending on whether you have a working card
+reader, Business Debit Card or authentication card, and your PIN [4].
+
+Option A: If you have your username, card reader, card, and PIN:
+
+1.  Go to the Forgotten your details? page [4].
+2.  Enter your User ID, first name, last name, and date of birth, then select
+    Continue [4].
+3.  Go to the Password & memorable information section on the What are you
+    having problems with today? page and select Continue [4].
+4.  Select Yes on the Do you have a working card reader with you? page [4].
+5.  Select Yes, I want to reset my password on the Do you want to reset your
+    password? page [4].
+6.  Enter and confirm your new password [4]. Your password must be 8 to 15
+    characters, have no spaces, and contain at least 3 letters and 1 number [4].
+    Allowed special characters are: @ . & - + / ' , _ [4]
+7.  Select either Yes, I want to reset my memorable information or No, I know my
+    memorable information [4].
+8.  Enter the last 5 digits of the card you are using on the Enter the passcode
+    from your card reader page [4].
+9.  Insert your Business Debit Card or authentication card into the card reader
+    and press Identify [4].
+10. Enter the card PIN and press Enter on the card reader [4].
+11. Type the 8-digit passcode shown on the card reader into the field on your
+    screen and select Continue [4].
+
+Option B: If you have your username, but DO NOT have your card reader, card, or PIN:
+
+1.  Go to the Forgotten your details? page [4].
+2.  Enter your User ID, first name, last name, and date of birth, then select
+    Continue [4].
+3.  Go to the Password & memorable information section on the What are you
+    having problems with today? page and select Continue [4].
+4.  Select No on the Do you have a working card reader with you? page [4].
+5.  Select Yes, I want to reset my password on the Do you want to reset your
+    password? page [4].
+6.  Confirm the reset option [4].
+7.  Enter and confirm your new password (8 to 15 characters, no spaces, at
+    least 3 letters, 1 number; allowed special characters: @ . & - + / ' , _)
+    [4].
+8.  Select either Yes, I want to reset my memorable information or No, I know my
+    memorable information [4].
+9.  Call us on 0345 072 5555 (or +44 1733 347 338 from outside the UK) to
+    complete the security verification [4].
+
+Troubleshooting: Memorable Information Isn't Working or Forgotten
+
+You do not need memorable information to log in; you can use your passkey or a
+card reader setup instead [8]. If you wish to reset your memorable information:
+
+What you will need:
+
+  - Your username (User ID) [8]
+  - Your first name [8]
+  - Your last name [8]
+  - Your date of birth [8]
+
+Option A: If you have a card reader, Business Debit Card or authentication card, and PIN:
+
+1.  Go to the Forgotten your details? page [8].
+2.  Enter your User ID, first name, last name, and date of birth [8].
+3.  Under What are you having problems with today?, go to Password & memorable
+    information and select Continue [10].
+4.  Select Yes on the Do you have a working card reader with you? page [10].
+5.  Select No, I know my password on the Do you want to reset your password?
+    page [10].
+6.  Select Yes, I want to reset my memorable information [10].
+7.  Create your memorable information when prompted [10]. It must be 6 to 15
+    characters with no spaces, contain at least 3 letters and 1 number, and have
+    no special characters [10].
+8.  Enter the last 5 digits of your card on the Enter the passcode from your
+    card reader page [10].
+9.  Insert your card into the card reader and press Identify [10].
+10. Enter the card PIN and press Enter [10].
+11. Enter the 8-digit passcode displayed on the card reader on your screen and
+    select Continue [10].
+
+Option B: If you DO NOT have a card reader, card, or PIN:
+
+1.  Go to the Forgotten your details? page [10].
+2.  Enter your User ID, first name, last name, and date of birth [10].
+3.  Select No on the Do you have a working card reader with you? page [10].
+4.  Select I want to reset my logon details without my card reader on the What
+    would you like to do? page [10].
+5.  Select No, I know my password on the Do you want to reset your password?
+    page [10].
+6.  Select Yes, I want to reset my memorable information [10].
+7.  Create your memorable information (6 to 15 characters, no spaces, at least 3
+    letters, 1 number, no special characters) [10].
+8.  Call us on 0345 072 5555 (or +44 1733 347 338 from outside the UK) [10].
+9.  Quote the reference number displayed on the Please call us to confirm your
+    changes page to the agent [10].
+
+Troubleshooting: No Passkey (Passkey and Everyday Login)
+
+You do not need a passkey to log into Online for Business [14]. You can instead
+log in using memorable information on a trusted device, or by using your card
+reader setup [14].
+
+If you do not have a passkey, we will invite you to set one up on any secure
+device you use to log in [14].
+
+SECTION 5: CARDS, PINs & HARDWARE SUPPORT
+
+Troubleshooting: What is a Trusted Device?
+
+A trusted device is a phone, tablet, or computer you have marked as safe [10].
+This lets the system know it is really you and prevents extra security checks
+during login [10].
+
+You can only trust your device when prompted by the system during a normal login
+flow [10].
+
+Supported browsers for trusting a device include:
+
+  - Google Chrome (Desktop & Mobile) — V66 and above [11]
+  - Microsoft Edge (Desktop) — V13 and above [11]
+  - Mozilla Firefox (Desktop & Mobile) — V34 and above [11]
+  - Opera (Desktop & Mobile) — V24 and above [11]
+  - Safari (Desktop & Mobile) — V11 and above [11]
+  - Yandex (Desktop & Mobile) — V15.5 and above [11]
+
+Troubleshooting: System Not Asking for Memorable Information (on a Trusted Device)
+
+If the system is not offering memorable information as a login option on a
+device you previously trusted, it may be due to:
+
+  - Browser cookies being cleared (manually or automatically) [11].
+  - Using a private or incognito browsing session [11].
+  - Unusual login activity, or multiple users logging in on the same device
+    [11].
+
+We will prompt you to trust your device again once we identify a regular and
+safe pattern of use [11].
+
+Troubleshooting: What is a Card Reader?
+
+A card reader is a secure physical device used to access Online for Business and
+to authorize sensitive transactions [11]. It does not store any personal
+information [11].
+
+A card reader passcode is required for:
+
+  - Person-to-person payments [11]
+  - All bill payments [11]
+  - New standing orders [11]
+  - International payments [11]
+  - Registering the mobile app for the first time [11]
+
+Note: Card readers are universal [11]. You can use a card reader from another
+bank as long as it has three buttons: Identify, Respond, and Sign [11].
+
+Troubleshooting: Card Reader Won't Turn On / Needs Replacement
+
+If your card reader does not turn on, the batteries likely need replacing
+[11, 13].
+
+  - Battery Type: Four (4) LR44 batteries [13].
+  - Instructions: Open the battery compartment on the back of the card reader to
+    replace them [11, 13].
+
+If the card reader still does not work after replacing the batteries:
+
+  - Via Mobile App: Go to Support > Message us to request a replacement [13].
+  - Via Website: Visit the Order a New Business Card Reader page and follow the
+    on-screen steps [13].
+
+Note: Lloyds provides up to 3 free card readers to each customer [13].
+Replacements are delivered to your registered business mailing address within 7
+to 10 working days [13].
+
+Troubleshooting: Card Reader is Locked
+
+If your card reader display shows "card locked contact bank", this means your
+card reader (not your actual bank card) has been locked [13].
+
+To unlock it, call us on 0345 072 5555 (or +44 1733 347 338 from outside the UK)
+[13].
+
+Troubleshooting: Card Reader Display is Too Small
+
+If the characters on your card reader's screen are too small, press the '0'
+(zero) button on the keypad to enlarge the text [13].
+
+Troubleshooting: What is a Passcode?
+
+A card reader passcode is a one-time 8-digit code generated by inserting your
+bank card, pressing Identify, and entering your card's PIN [13].
+
+Troubleshooting: "Last 5 Digits Not Matching" Message
+
+If you receive a message stating the last 5 digits of your card do not match
+during login, verify that you are using the correct card [13]. Check the card
+number against the digit requirements displayed on Step 1 of the login screen
+[13].
+
+Troubleshooting: Lost or Forgotten Business Debit Card PIN
+
+You do not need your card PIN to log into Online for Business if you use a
+passkey or memorable information on a trusted device [12].
+
+If you need your Business Debit Card PIN:
+
+  - Via Mobile App: If you are registered on the business banking app, you can
+    view your PIN securely in the Cards section [12].
+  - If you do not have the App: Call us on 0345 072 5555 to request a paper PIN
+    replacement [12].
+  - Activation: Once your replacement PIN arrives by post, you must activate it
+    at any Lloyds, Bank of Scotland, or Halifax ATM [12]. Insert the card, enter
+    the PIN, and select Services > Unlock PIN [12].
+
+Troubleshooting: Lost or Forgotten Authentication Card PIN
+
+Authentication card PINs cannot be viewed in the mobile app [12]. If forgotten,
+you must request a replacement [12].
+
+1.  Call us on 0345 072 5555 (or +44 1733 347 338 from outside the UK) to
+    request a replacement PIN [12].
+2.  Once received by post, activate it at any Lloyds, Bank of Scotland, or
+    Halifax ATM by selecting Services > Unlock PIN [12].
+
+Note: Authentication card PINs cannot be activated at Lloyds Bank Market Street
+(Manchester) or Bank of Scotland Argyle Street (Glasgow) ATMs [12].
+
+Troubleshooting: Lost or Forgotten Business Debit Card
+
+If your card has been lost or stolen:
+
+1.  Report it immediately by calling 0345 072 5555 (or +44 1733 347 338 from
+    outside the UK) [14].
+2.  Order a replacement card via the Order a Replacement Business Debit Card
+    page [14]. Only the registered cardholder can order a replacement [14].
+3.  Activate your new card upon arrival by completing a standard Chip & PIN
+    transaction [14].
+
+Troubleshooting: Lost or Forgotten Authentication Card
+
+If you lose your authentication card, you can still log in using a passkey or
+memorable information on a trusted device [14]. To order a replacement card:
+
+  - Via Mobile App: Go to Support > Message us and ask the digital assistant to
+    "Order a replacement authentication card" [14].
+  - If you do not have the App: Call us on 0345 072 5555 to place an order [14].
+
+Note: Once your new authentication card arrives, you can use it immediately with
+your existing card PIN without needing to activate it [14].

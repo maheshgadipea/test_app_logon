@@ -10,6 +10,25 @@ then walks the user through the fix one step at a time — all from a
 single shared persona so phase changes feel like one assistant shifting
 focus, never like a new bot taking over.
 
+### Two-container layout
+
+```
+┌──────────────────────────┐  HTTP   ┌──────────────────────────┐
+│  chatbot                 │ ──────► │  llm-server              │
+│  port 8000 (host)        │         │  port 8100 (internal)    │
+│                          │         │                          │
+│  • FastAPI + LangGraph   │         │  • FastAPI proxy         │
+│  • Chroma + SQLite       │         │  • gemini-2.5-flash      │
+│  • RemoteChatModel       │         │  • text-embedding-004    │
+│  • RemoteEmbeddings      │         │  • holds GOOGLE_API_KEY  │
+└──────────────────────────┘         └──────────────────────────┘
+```
+
+The chatbot container has **no Google credentials and no Google SDK** —
+every Gemini call (chat generation AND embeddings) goes over HTTP to the
+`llm-server` container. Swap the model provider by replacing one
+service; the chatbot is unaware.
+
 ---
 
 ## 1. Plug in your document and key
@@ -36,14 +55,16 @@ docker compose up -d
 
 First boot will:
 
-- load `./data/reference.docx`,
+- start `llm-server` and wait for its `/health` to go green,
+- start `chatbot`, which loads `./data/reference.docx`,
 - chunk it (defaults: 800 / 120 overlap, see [app/config.py](app/config.py)),
-- embed with Gemini `text-embedding-004`,
+- embed via `llm-server` using `text-embedding-004`,
 - persist a Chroma store under `./storage/chroma/`.
 
 The embedding step runs ONCE. Subsequent restarts reuse the persisted
 store. Delete `./storage/chroma/` to force a re-ingest after changing the
-document or chunking settings.
+document, chunking settings, or the embedding model (the vectors are
+model-specific — mixing models will silently degrade retrieval quality).
 
 Health check:
 
@@ -84,9 +105,10 @@ Open [app/config.py](app/config.py) — every knob is there at the top:
 | `REFERENCE_DOC_PATH` | Path inside the container (set via env in compose) |
 | `CHUNK_SIZE` / `CHUNK_OVERLAP` | Splitter config |
 | `TOP_K` | How many chunks `retrieve_docs` returns |
-| `EMBEDDING_MODEL` | Default: `models/text-embedding-004` |
-| `GENERATION_MODEL` | Default: `gemini-1.5-pro` (try `-flash` for cheap/fast) |
+| `EMBEDDING_MODEL` | Default: `models/text-embedding-004` (requested from llm-server) |
+| `GENERATION_MODEL` | Default: `gemini-2.5-flash` (requested from llm-server) |
 | `GENERATION_TEMPERATURE` | Default `0.4` |
+| `LLM_SERVER_URL` | Default: `http://llm-server:8100` (compose-internal) |
 
 To force a re-ingest after changing `CHUNK_SIZE` or the document:
 
@@ -109,7 +131,8 @@ docker compose up -d
 ## 6. Tail the logs
 
 ```bash
-docker compose logs -f chatbot
+docker compose logs -f chatbot       # the bot
+docker compose logs -f llm-server    # the Gemini proxy (every model call)
 ```
 
 ---

@@ -1,25 +1,76 @@
 services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: bcb-postgres
+    environment:
+      POSTGRES_USER: chatbot
+      POSTGRES_PASSWORD: chatbot
+      POSTGRES_DB: chatbot
+    # Internal-only — the chatbot reaches it on the compose network.
+    expose:
+      - "5432"
+    volumes:
+      # Persists the vector store + LangGraph checkpoints across restarts.
+      - ./storage/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chatbot -d chatbot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  llm-server:
+    build:
+      context: .
+      dockerfile: llm_server/Dockerfile
+    image: bcb-llm-server:latest
+    container_name: bcb-llm-server
+    environment:
+      # The Gemini key lives ONLY in this container. The chatbot never
+      # sees it. Injected from your .env file at the project root.
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      GENERATION_MODEL: "gemini-2.5-flash"
+      # `text-embedding-004` is not served on the v1beta endpoint; Google's
+      # current embedding model is `gemini-embedding-001`.
+      EMBEDDING_MODEL: "models/gemini-embedding-001"
+    # Internal-only: not exposed to the host. The chatbot reaches it
+    # over the compose network at http://llm-server:8100.
+    expose:
+      - "8100"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8100/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+
   chatbot:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: bcb-chatbot:latest
     container_name: bcb-chatbot
     ports:
       - "8000:8000"
     environment:
-      # Inject your Gemini key via .env (never hardcode it).
-      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      # No GOOGLE_API_KEY here on purpose — all Gemini access goes
+      # through the llm-server container.
+      LLM_SERVER_URL: "http://llm-server:8100"
+      POSTGRES_URL: "postgresql://chatbot:chatbot@postgres:5432/chatbot"
       REFERENCE_DOC_PATH: /app/data/bcb_login.txt
-      STORAGE_DIR: /app/storage
-      # Optional knobs (uncomment to override config.py defaults):
       CHUNK_SIZE: "800"
       CHUNK_OVERLAP: "120"
       TOP_K: "4"
-      EMBEDDING_MODEL: "gemini-embedding-001"
+      EMBEDDING_MODEL: "models/gemini-embedding-001"
       GENERATION_MODEL: "gemini-2.5-flash"
     volumes:
       # Drop your reference .docx here on the host.
       - ./data:/app/data:ro
-      # Persists Chroma vector store + SqliteSaver checkpoint DB across
-      # container restarts — conversations survive `docker compose down`.
-      - ./storage:/app/storage
+    depends_on:
+      llm-server:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     restart: unless-stopped

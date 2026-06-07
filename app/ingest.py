@@ -1,11 +1,11 @@
 """
-Load the reference .docx, chunk it, embed with Gemini text-embedding-004,
-and persist a Chroma vector store on disk.
+Load the reference document, chunk it, embed via the llm-server, and
+persist into pgvector inside the postgres container.
 
-This runs ONCE at app startup (see main.py lifespan). The vector store
-object is then held in module state and reused for every /chat request —
-we never re-embed per request, and we never rebuild from scratch unless
-the persisted Chroma directory is missing.
+Runs ONCE at app startup (see main.py lifespan). The PGVector store is
+held in module state and reused for every /chat request — we never
+re-embed per request, and we never re-ingest unless the collection is
+empty.
 """
 
 from __future__ import annotations
@@ -13,60 +13,96 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
+import psycopg
 from langchain_community.document_loaders import Docx2txtLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_chroma import Chroma
+from langchain_postgres import PGVector
 
 from .config import (
     CHUNK_OVERLAP,
     CHUNK_SIZE,
     EMBEDDING_MODEL,
-    GOOGLE_API_KEY,
+    LLM_SERVER_URL,
+    POSTGRES_URL,
     REFERENCE_DOC_PATH,
-    VECTOR_STORE_DIR,
+    VECTOR_COLLECTION,
 )
+from .llm_client import RemoteEmbeddings
 
 log = logging.getLogger(__name__)
 
-_vector_store: Chroma | None = None
+_vector_store: PGVector | None = None
 
 
-def build_or_load_vector_store() -> Chroma:
+def _sqlalchemy_url(uri: str) -> str:
+    """PGVector goes through SQLAlchemy; force the psycopg3 driver so it
+    doesn't try to pull in psycopg2."""
+    if uri.startswith("postgresql+"):
+        return uri
+    if uri.startswith("postgresql://"):
+        return "postgresql+psycopg://" + uri[len("postgresql://") :]
+    if uri.startswith("postgres://"):
+        return "postgresql+psycopg://" + uri[len("postgres://") :]
+    return uri
+
+
+def _existing_vector_count(collection: str) -> int:
+    """Count rows already embedded for this collection. Returns 0 if the
+    pgvector tables don't exist yet (first boot)."""
+    try:
+        with psycopg.connect(POSTGRES_URL) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT EXISTS (
+                      SELECT 1 FROM information_schema.tables
+                      WHERE table_name = 'langchain_pg_embedding'
+                    )
+                    """
+                )
+                if not cur.fetchone()[0]:
+                    return 0
+                cur.execute(
+                    """
+                    SELECT COUNT(*)
+                    FROM langchain_pg_embedding e
+                    JOIN langchain_pg_collection c ON e.collection_id = c.uuid
+                    WHERE c.name = %s
+                    """,
+                    (collection,),
+                )
+                return int(cur.fetchone()[0] or 0)
+    except psycopg.Error as e:
+        log.warning("Could not count existing vectors (%s); will re-ingest.", e)
+        return 0
+
+
+def build_or_load_vector_store() -> PGVector:
     """Build the vector store at startup (once) and keep it in memory.
 
-    Re-uses the persisted Chroma directory across container restarts, so we
-    only embed the document the first time. Delete ./storage/chroma to
-    force a rebuild (e.g. after changing the doc or chunking settings).
+    Re-uses persisted pgvector rows across container restarts, so we only
+    embed the document the first time. Drop the rows for our collection
+    (or just `DROP TABLE langchain_pg_embedding`) to force a rebuild.
     """
     global _vector_store
     if _vector_store is not None:
         return _vector_store
 
-    if not GOOGLE_API_KEY:
-        raise RuntimeError(
-            "GOOGLE_API_KEY (or GEMINI_API_KEY) is not set. "
-            "Add it to your .env or pass via docker-compose."
-        )
-
-    embeddings = GoogleGenerativeAIEmbeddings(
+    embeddings = RemoteEmbeddings(
+        base_url=LLM_SERVER_URL,
         model=EMBEDDING_MODEL,
-        google_api_key=GOOGLE_API_KEY,
     )
 
-    VECTOR_STORE_DIR.mkdir(parents=True, exist_ok=True)
-
-    # A half-failed previous ingest can leave a NON-EMPTY directory with
-    # ZERO vectors. Distinguishing "ready" from "stale" via mere
-    # `any(iterdir())` masks that failure. Build the store first, ask
-    # Chroma how many vectors it actually has, and only skip re-ingest
-    # when there's real data inside.
-    store = Chroma(
-        collection_name="reference_doc",
-        embedding_function=embeddings,
-        persist_directory=str(VECTOR_STORE_DIR),
+    # Constructing PGVector creates the extension + schema tables if
+    # they're missing (idempotent), so this is safe to call every boot.
+    store = PGVector(
+        embeddings=embeddings,
+        collection_name=VECTOR_COLLECTION,
+        connection=_sqlalchemy_url(POSTGRES_URL),
+        use_jsonb=True,
     )
-    existing_count = store._collection.count()
+
+    existing_count = _existing_vector_count(VECTOR_COLLECTION)
 
     if existing_count == 0:
         if not REFERENCE_DOC_PATH.exists():
@@ -75,26 +111,26 @@ def build_or_load_vector_store() -> Chroma:
                 "Drop your .docx / .txt / .md in ./data/ "
                 "(or set REFERENCE_DOC_PATH)."
             )
-        log.info("Ingesting %s (Chroma was empty)", REFERENCE_DOC_PATH)
+        log.info("Ingesting %s (pgvector was empty)", REFERENCE_DOC_PATH)
         docs = _load_document(REFERENCE_DOC_PATH)
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=CHUNK_SIZE,
             chunk_overlap=CHUNK_OVERLAP,
         )
         chunks = splitter.split_documents(docs)
-        log.info("Indexing %d chunks into Chroma", len(chunks))
+        log.info("Indexing %d chunks into pgvector", len(chunks))
         store.add_documents(chunks)
     else:
         log.info(
-            "Reusing persisted vector store at %s (%d vectors)",
-            VECTOR_STORE_DIR, existing_count,
+            "Reusing persisted pgvector collection %r (%d vectors)",
+            VECTOR_COLLECTION, existing_count,
         )
 
     _vector_store = store
     return store
 
 
-def get_vector_store() -> Chroma:
+def get_vector_store() -> PGVector:
     if _vector_store is None:
         raise RuntimeError(
             "Vector store not initialized — call build_or_load_vector_store() first."

@@ -1,0 +1,23 @@
+# ─── Secrets ─────────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ─── Runtime state (recreated by `docker compose up`) ────────────────
+# Postgres bind-mounted data dir, plus any older chroma/sqlite leftovers.
+storage/
+
+# ─── Python ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ─── OS / editor ─────────────────────────────────────────────────────
+.DS_Store
+.idea/
+.vscode/

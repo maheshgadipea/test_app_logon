@@ -55,13 +55,17 @@ from __future__ import annotations
 from typing import Annotated, TypedDict
 
 from langchain_core.messages import AIMessage, SystemMessage
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.graph import START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.types import interrupt
 
-from .config import GENERATION_MODEL, GENERATION_TEMPERATURE, GOOGLE_API_KEY
+from .config import (
+    GENERATION_MODEL,
+    GENERATION_TEMPERATURE,
+    LLM_SERVER_URL,
+)
+from .llm_client import RemoteChatModel
 from .persona import STEP_DONE_MARKER, build_system_prompt
 from .tools import retrieve_docs
 
@@ -87,14 +91,9 @@ _llm_with_tools = None
 def _get_llm_with_tools():
     global _llm_with_tools
     if _llm_with_tools is None:
-        if not GOOGLE_API_KEY:
-            raise RuntimeError(
-                "GOOGLE_API_KEY (or GEMINI_API_KEY) is not set. "
-                "Add it to your .env / docker-compose environment."
-            )
-        llm = ChatGoogleGenerativeAI(
+        llm = RemoteChatModel(
+            base_url=LLM_SERVER_URL,
             model=GENERATION_MODEL,
-            google_api_key=GOOGLE_API_KEY,
             temperature=GENERATION_TEMPERATURE,
         )
         _llm_with_tools = llm.bind_tools(TOOLS)

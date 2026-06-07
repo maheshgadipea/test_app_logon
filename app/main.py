@@ -3,11 +3,10 @@ FastAPI entrypoint.
 
 Startup (lifespan)
 ──────────────────
-1. Ensure the storage dir exists (it's a mounted volume in Docker).
-2. Build (or reload) the Chroma vector store — embedding the .docx if it
+1. Build (or reload) the pgvector store — embedding the .docx if it
    hasn't been embedded yet. Done ONCE per process; never per request.
-3. Open the SqliteSaver checkpointer against a SQLite file ALSO on the
-   mounted volume, so conversation threads survive container restarts.
+3. Open a PostgresSaver checkpointer against the postgres container, so
+   conversation threads survive container restarts.
 4. Compile the LangGraph with that checkpointer.
 
 Per-request
@@ -27,7 +26,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import sqlite3
 from contextlib import asynccontextmanager
 from typing import Any
 
@@ -38,10 +36,11 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.types import Command
+from psycopg_pool import ConnectionPool
 
-from .config import CHECKPOINT_DB, STORAGE_DIR
+from .config import POSTGRES_URL
 from .graph import build_graph
 from .ingest import build_or_load_vector_store
 
@@ -55,24 +54,36 @@ log = logging.getLogger("chatbot")
 
 # Module-level singletons — built once at startup.
 _graph = None
-_conn: sqlite3.Connection | None = None
+_pool: ConnectionPool | None = None
+
+
+# PostgresSaver needs each connection in autocommit mode with
+# prepare_threshold=0; these are the settings LangGraph documents.
+_PG_CONN_KWARGS = {
+    "autocommit": True,
+    "prepare_threshold": 0,
+}
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global _graph, _conn
-
-    STORAGE_DIR.mkdir(parents=True, exist_ok=True)
+    global _graph, _pool
 
     log.info("Loading reference document and vector store …")
     build_or_load_vector_store()
 
-    log.info("Opening SqliteSaver checkpointer at %s", CHECKPOINT_DB)
-    # check_same_thread=False because FastAPI may handle requests on
-    # different threads via asyncio.to_thread. SqliteSaver itself
-    # serializes writes.
-    _conn = sqlite3.connect(str(CHECKPOINT_DB), check_same_thread=False)
-    checkpointer = SqliteSaver(_conn)
+    log.info("Opening PostgresSaver checkpointer at %s", POSTGRES_URL)
+    # A pool (not a single conn) — FastAPI dispatches requests on
+    # different threads via asyncio.to_thread, and a pool keeps each one
+    # on its own connection.
+    _pool = ConnectionPool(
+        conninfo=POSTGRES_URL,
+        max_size=20,
+        kwargs=_PG_CONN_KWARGS,
+    )
+    checkpointer = PostgresSaver(_pool)
+    # Idempotent — creates the checkpoint tables if missing.
+    checkpointer.setup()
 
     _graph = build_graph(checkpointer)
     log.info("Graph compiled. Ready to chat.")
@@ -80,8 +91,8 @@ async def lifespan(app: FastAPI):
     try:
         yield
     finally:
-        if _conn is not None:
-            _conn.close()
+        if _pool is not None:
+            _pool.close()
 
 
 app = FastAPI(title="RAG Support Chatbot", lifespan=lifespan)
@@ -145,7 +156,7 @@ async def chat(body: ChatIn) -> ChatOut:
             # conversation continuous instead of restarting it.
             _graph.invoke(Command(resume=body.message), config)
 
-    # LangGraph + SqliteSaver are sync; offload so we don't block the
+    # LangGraph + PostgresSaver are sync; offload so we don't block the
     # event loop.
     await asyncio.to_thread(_run)
 
