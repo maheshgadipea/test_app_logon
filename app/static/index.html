@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BCB Login Support</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --border: #e3e6eb;
+      --text: #1f2328;
+      --muted: #6b7280;
+      --user: #1f6feb;
+      --user-fg: #ffffff;
+      --bot: #eef1f5;
+      --bot-fg: #1f2328;
+      --error: #b42318;
+      --error-bg: #fee4e2;
+      --accent: #1f6feb;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+            "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      flex: 0 0 auto;
+      padding: 14px 20px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    header .meta {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    header code {
+      background: #eef1f5;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 11px;
+    }
+    header button {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    header button:hover { background: var(--bg); }
+
+    main {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 820px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .msg {
+      display: flex;
+      gap: 10px;
+      max-width: 78%;
+    }
+    .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+    .msg .bubble {
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .msg.user .bubble {
+      background: var(--user);
+      color: var(--user-fg);
+      border-bottom-right-radius: 4px;
+    }
+    .msg.bot .bubble {
+      background: var(--bot);
+      color: var(--bot-fg);
+      border-bottom-left-radius: 4px;
+    }
+    .msg.error .bubble {
+      background: var(--error-bg);
+      color: var(--error);
+      border-bottom-left-radius: 4px;
+    }
+    .msg.thinking .bubble {
+      background: var(--bot);
+      color: var(--muted);
+      font-style: italic;
+    }
+    .msg.thinking .dots::after {
+      content: '';
+      display: inline-block;
+      animation: dots 1.4s infinite;
+    }
+    @keyframes dots {
+      0%   { content: ''; }
+      25%  { content: '.'; }
+      50%  { content: '..'; }
+      75%  { content: '...'; }
+      100% { content: ''; }
+    }
+
+    footer {
+      flex: 0 0 auto;
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      padding: 12px 20px;
+    }
+    form {
+      max-width: 820px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    textarea {
+      flex: 1;
+      resize: none;
+      min-height: 44px;
+      max-height: 160px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font: inherit;
+      color: var(--text);
+      background: var(--panel);
+      outline: none;
+    }
+    textarea:focus { border-color: var(--accent); }
+    button.send {
+      padding: 10px 18px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .hint {
+      max-width: 820px;
+      margin: 6px auto 0;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>BCB Login Support</h1>
+    <div class="meta">
+      <span>Session: <code id="sid">…</code></span>
+      <span>Step <span id="step">0</span></span>
+      <button id="reset" title="Start a new conversation">New conversation</button>
+    </div>
+  </header>
+
+  <main id="chat" aria-live="polite"></main>
+
+  <footer>
+    <form id="composer" autocomplete="off">
+      <textarea
+        id="input"
+        placeholder="Describe what you need help with…  (Enter to send, Shift+Enter for new line)"
+        rows="1"
+      ></textarea>
+      <button type="submit" class="send" id="send">Send</button>
+    </form>
+    <div class="hint">Answers come from your reference document only.</div>
+  </footer>
+
+  <script>
+    const SID_KEY = "bcb_chatbot_session_id";
+
+    const $chat   = document.getElementById("chat");
+    const $sid    = document.getElementById("sid");
+    const $step   = document.getElementById("step");
+    const $input  = document.getElementById("input");
+    const $send   = document.getElementById("send");
+    const $form   = document.getElementById("composer");
+    const $reset  = document.getElementById("reset");
+
+    // ─── session_id management ──────────────────────────────────────────
+    // Same session_id across turns → LangGraph thread state loads and the
+    // bot picks up where it left off. Refreshing the page keeps the
+    // session. "New conversation" generates a fresh id.
+    function newId() {
+      if (window.crypto?.randomUUID) return crypto.randomUUID();
+      return "s-" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+    }
+    function getSessionId() {
+      let id = localStorage.getItem(SID_KEY);
+      if (!id) { id = newId(); localStorage.setItem(SID_KEY, id); }
+      return id;
+    }
+    function resetSession() {
+      const id = newId();
+      localStorage.setItem(SID_KEY, id);
+      $sid.textContent = shortSid(id);
+      $step.textContent = "0";
+      $chat.innerHTML = "";
+      greet();
+    }
+    function shortSid(id) { return id.length > 12 ? id.slice(0, 8) + "…" : id; }
+
+    // ─── Rendering ──────────────────────────────────────────────────────
+    function bubble(role, text, extraClass = "") {
+      const wrap = document.createElement("div");
+      wrap.className = "msg " + role + (extraClass ? " " + extraClass : "");
+      const b = document.createElement("div");
+      b.className = "bubble";
+      b.textContent = text;
+      wrap.appendChild(b);
+      $chat.appendChild(wrap);
+      $chat.scrollTop = $chat.scrollHeight;
+      return wrap;
+    }
+    function thinking() {
+      const wrap = document.createElement("div");
+      wrap.className = "msg bot thinking";
+      const b = document.createElement("div");
+      b.className = "bubble";
+      b.innerHTML = 'Thinking<span class="dots"></span>';
+      wrap.appendChild(b);
+      $chat.appendChild(wrap);
+      $chat.scrollTop = $chat.scrollHeight;
+      return wrap;
+    }
+    function greet() {
+      bubble("bot",
+        "Hi, I'm Sage — I can help with the reference document loaded into this " +
+        "bot. Tell me what you're trying to do or what's not working, and I'll " +
+        "ask a couple of questions before we start fixing it."
+      );
+    }
+
+    // ─── Network ────────────────────────────────────────────────────────
+    async function send(message) {
+      const session_id = getSessionId();
+      $send.disabled = true;
+      $input.disabled = true;
+      const pending = thinking();
+      try {
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ session_id, message }),
+        });
+        const data = await res.json().catch(() => ({}));
+        pending.remove();
+        if (!res.ok) {
+          bubble("error", data.detail || ("HTTP " + res.status));
+          return;
+        }
+        bubble("bot", data.reply || "(empty reply)");
+        if (typeof data.current_step === "number") {
+          $step.textContent = String(data.current_step);
+        }
+      } catch (err) {
+        pending.remove();
+        bubble("error", "Network error: " + err.message);
+      } finally {
+        $send.disabled = false;
+        $input.disabled = false;
+        $input.focus();
+      }
+    }
+
+    // ─── Wiring ─────────────────────────────────────────────────────────
+    $form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = $input.value.trim();
+      if (!text) return;
+      bubble("user", text);
+      $input.value = "";
+      autoSize();
+      send(text);
+    });
+
+    // Enter sends, Shift+Enter newline
+    $input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        $form.requestSubmit();
+      }
+    });
+
+    // Auto-grow textarea
+    function autoSize() {
+      $input.style.height = "auto";
+      $input.style.height = Math.min($input.scrollHeight, 160) + "px";
+    }
+    $input.addEventListener("input", autoSize);
+
+    $reset.addEventListener("click", () => {
+      if (confirm("Start a new conversation? This won't affect prior threads on the server.")) {
+        resetSession();
+        $input.focus();
+      }
+    });
+
+    // ─── Boot ───────────────────────────────────────────────────────────
+    $sid.textContent = shortSid(getSessionId());
+    greet();
+    $input.focus();
+  </script>
+</body>
+</html>

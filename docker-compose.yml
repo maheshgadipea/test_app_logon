@@ -1,0 +1,25 @@
+services:
+  chatbot:
+    build: .
+    image: bcb-chatbot:latest
+    container_name: bcb-chatbot
+    ports:
+      - "8000:8000"
+    environment:
+      # Inject your Gemini key via .env (never hardcode it).
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      REFERENCE_DOC_PATH: /app/data/bcb_login.txt
+      STORAGE_DIR: /app/storage
+      # Optional knobs (uncomment to override config.py defaults):
+      CHUNK_SIZE: "800"
+      CHUNK_OVERLAP: "120"
+      TOP_K: "4"
+      EMBEDDING_MODEL: "gemini-embedding-001"
+      GENERATION_MODEL: "gemini-2.5-flash"
+    volumes:
+      # Drop your reference .docx here on the host.
+      - ./data:/app/data:ro
+      # Persists Chroma vector store + SqliteSaver checkpoint DB across
+      # container restarts — conversations survive `docker compose down`.
+      - ./storage:/app/storage
+    restart: unless-stopped
